@@ -35,8 +35,18 @@ ht1632c::ht1632c()
  * @param char val
  */
 void ht1632c::plot (char x, char y, char val) {
-  
+  char vetorX[24] = {7, 6, 5, 4, 3, 2, 1, 0, 15, 14, 13, 12, 11, 10, 9, 8, 23, 22, 21, 20, 19, 18, 17, 16};
   char addr, bitval;
+  
+  /*if(x>=0 && x<=7){
+    x = 7 - x;
+  } else if(x>=8 && x<=15){
+    x = 23 - x;
+  } else {
+    x = 39 - x;
+  }*/
+  
+  x = vetorX[x];
  
   if (x<0 || x > _geometry_x-1 || y < 0 || y > _geometry_y-1) return;
 
@@ -158,6 +168,24 @@ void ht1632c::flashing_cursor(byte xpos, byte ypos, byte cursor_width, byte curs
   }
 }
 
+void ht1632c::fade_night() {
+  char intensity;
+  for (intensity=14; intensity >= 0; intensity--) {
+    sendcmd(0, HT1632_CMD_PWM + intensity); //send intensity commands using CS0 for display 0
+    sendcmd(1, HT1632_CMD_PWM + intensity); //send intensity commands using CS0 for display 1
+    delay(_fadedelay);
+  }
+}
+
+void ht1632c::fade_day() {
+  char intensity;
+  for ( intensity=0; intensity < 15; intensity++) {
+    sendcmd(0, HT1632_CMD_PWM + intensity); //send intensity commands using CS0 for display 0
+    sendcmd(1, HT1632_CMD_PWM + intensity); //send intensity commands using CS0 for display 1
+    delay(_fadedelay);
+  }
+}
+
 void ht1632c::fade_down() {
   char intensity;
   for (intensity=14; intensity >= 0; intensity--) {
@@ -235,7 +263,7 @@ void ht1632c::setup(byte data, byte wrclk, byte displays) {
 
 		sendcmd(d, HT1632_CMD_SYSON);    // System on 
 		sendcmd(d, HT1632_CMD_LEDON);    // LEDs on 
-		sendcmd(d, HT1632_CMD_COMS01);   // NMOS Output 24 row x 24 Com mode
+		sendcmd(d, HT1632_CMD_COMS11);   // NMOS Output 24 row x 24 Com mode
 
 		for (byte i=0; i<128; i++)
 	  		senddata(d, i, 0);  // clear the display!

@@ -10,7 +10,7 @@
 
 #define HT1632_DATA_PIN 10 /* Arduino digital pin connected to display DATA pin */
 #define HT1632_WRCLK_PIN 11 /* Arduino digital pin connected to display WRCLK pin */
-#define HT1632_CS_PIN 4 /* Arduino digital pin connected to display CS1 pin */
+#define HT1632_CS_PIN 12 /* Arduino digital pin connected to display CS1 pin */
 #define HT1632_GEOMETRY_X 24 /* display width */
 #define HT1632_GEOMETRY_Y 16 /* display height */
 
@@ -71,6 +71,8 @@ class ht1632c
 	void put_char(byte, byte, char);
 	void putstring(byte, byte, char*);
 	void flashing_cursor(byte, byte, byte, byte, byte);
+	void fade_night(void);
+	void fade_day(void);
 	void fade_down(void);
 	void fade_up(void);
 	void brightness(char);
